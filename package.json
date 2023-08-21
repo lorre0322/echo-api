@@ -29,14 +29,11 @@
     "dotenv": "^16.3.1",
     "fastify": "^4.21.0",
     "fs": "^0.0.1-security",
-    "ipdb": "^0.3.3",
     "jsonwebtoken": "^9.0.1",
     "marked": "^7.0.3",
     "marked-gfm-heading-id": "^3.0.6",
     "mongoose": "^7.4.3",
     "nodemailer": "^6.9.4",
-    "path": "^0.12.7",
-    "qqwry.ipdb": "^2023.8.9",
-    "ua-parser-js": "^2.0.0-alpha.2"
+    "path": "^0.12.7"
   }
 }

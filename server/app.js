@@ -12,7 +12,7 @@ const app = require("fastify")({ bodyLimit: 5242880 });
 const cors = require('@fastify/cors')
 app.register(cors, { 
   origin: "*",
-  // methods:"['GET', 'PUT', 'POST','DELETE']",
+  methods:"['GET', 'PUT', 'POST','DELETE']",
   allowedHeaders:['Content-Type']
 })
 

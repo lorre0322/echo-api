@@ -201,46 +201,48 @@ exports.delImg = function _callee4(req, res) {
         case 0:
           id = req.params.id;
           token = req.body.token;
-          _context4.next = 4;
+          console.log(id);
+          _context4.next = 5;
           return regeneratorRuntime.awrap(User.findOne({
             status: "admin"
           }));
 
-        case 4:
+        case 5:
           config = _context4.sent;
-          _context4.next = 7;
+          _context4.next = 8;
           return regeneratorRuntime.awrap(verifyToken(token, config._id));
 
-        case 7:
+        case 8:
           isToken = _context4.sent;
 
           if (!(!token || !isToken)) {
-            _context4.next = 10;
+            _context4.next = 11;
             break;
           }
 
           return _context4.abrupt("return", msg.er("You don't have permission ."));
 
-        case 10:
-          _context4.next = 12;
+        case 11:
+          _context4.next = 13;
           return regeneratorRuntime.awrap(Album.findByIdAndRemove(id));
 
-        case 12:
+        case 13:
           data = _context4.sent;
+          console.log(data);
 
           if (data) {
-            _context4.next = 15;
+            _context4.next = 17;
             break;
           }
 
           return _context4.abrupt("return", msg.er("not found this image."));
 
-        case 15:
+        case 17:
           return _context4.abrupt("return", msg.sc({
             data: data
           }));
 
-        case 16:
+        case 18:
         case "end":
           return _context4.stop();
       }
