@@ -1,11 +1,11 @@
 const msg={
   sc:(e)=> {
-    e.msg="success"
+    e.ok=true
     return e
   },
   er:(e)=> {
     return{
-      msg:"failed",
+      ok:false,
       reason:e
     }
   }

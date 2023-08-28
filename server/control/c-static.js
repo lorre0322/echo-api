@@ -65,12 +65,11 @@ exports.getImgList=async(req)=>{
 exports.delImg=async(req,res)=>{
   const { id } = req.params
   const { token }=req.body
-  console.log(id);
+  
   const config = await User.findOne({ status: "admin" })
   const isToken = await verifyToken(token, config._id)
   if(!token || !isToken) return msg.er("You don't have permission .")
   const data=await Album.findByIdAndRemove(id)
-  console.log(data);
   if(!data) return msg.er("not found this image.")
   return msg.sc({data})
 }

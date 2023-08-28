@@ -20,7 +20,6 @@ function jwtVerify(token, secret) {
 }
 
 // 验证 Params
-
 function verify(body, params) {
   for (const param of params) {
     if (!body[param]) {
@@ -30,7 +29,6 @@ function verify(body, params) {
   }
 }
 // 验证 Token
-
 function verifyToken(token, id) {
   const data = jwtVerify(token, SECRET)
   if (data.msg) return false
@@ -40,4 +38,5 @@ function verifyToken(token, id) {
     return false
   }
 }
+
 module.exports = { SECRET, jwtSign, jwtVerify, verify, verifyToken }
