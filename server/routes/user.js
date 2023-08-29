@@ -1,15 +1,21 @@
 const control = require("../control/c-user")
-const user = [
-	{
-		method: "POST",
-		url: "/init",
-		handler: control.Init,
 
-	},
-	{
-		method: "POST",
-		url: "/login",
-		handler: control.Login,
-	},
-]
-module.exports = user
+module.exports = () => {
+  return [{
+    method: "POST",
+    url: "/user/:id",
+    handler: control.getuser
+  }, {
+    method: "POST",
+    url: "/signup",
+    handler: control.signup
+  }, {
+    method: "POST",
+    url: "/login",
+    handler: control.login
+  },{
+    method: "GET",
+    url: "/user/:id",
+    handler: control.updateConfig
+  }]
+}

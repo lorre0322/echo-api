@@ -1,5 +1,4 @@
+require('dotenv').config()
 const path = require("path")
-module.exports = {
-  filePath: path.join(__dirname, `./public`)
-}
-require("./server/app")
+module.exports = { filePath: path.join(__dirname, `./public`) }
+require("./server/app").service()

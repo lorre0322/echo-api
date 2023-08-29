@@ -1,86 +1,55 @@
-const {
-  User
-} = require("../module")
-const {
-  msg
-} = require("../utils/msg")
-const sendmail = require("../utils/sendmail")
+const { User } =require('../model')
 const bcrypt = require("bcrypt")
-const {
-  SECRET,
-  jwtSign,
-  verify,
-  verifyToken
-} = require("../utils/verify")
+const { msg,verify,jwtSign,verifyToken } =require('../utils')
+exports.getuser=async(req,res)=>{
+return {
+  name:"lorre"
+}
+}
 
-exports.Init = async (req) => {
-  const {
-    username,
-    password,
-    email,
-    website
-  } = req.body
-
-  const noEmpty = (await User.find()).length
-
-  if (noEmpty) {
-    return msg.er("Create failed ! Already have an admin .")
-  } else {
-    const option = {
-      username,
-      password: bcrypt.hashSync(password, 8),
-      website: website || "echo blog",
-      email,
-      status: "admin",
-      page_limit: 5,
-      comment_limit: 5,
-      smtp_url: process.env.SMTP_URL || "smtp.qq.com",
-      smtp_port: process.env.SMTP_PORT || 465,
-      smtp_psw: process.env.SMTP_PSW || ""
-
-    }
-    const admin = await new User(option).save()
-    if (admin && option.smtp_psw) {
-      await sendmail("注册成功", option.email, {})
-    }
-    return msg.sc({
-      admin
-    })
+// Registered Users
+exports.signup=async(req,res)=>{
+  const { name , pw , mail } = req.body
+  const option = {
+    name,
+    pw:bcrypt.hashSync(pw, 8),
+    mail,
+    smtp_url: process.env.SMTP_URL || "smtp.qq.com",
+    smtp_port: process.env.SMTP_PORT || 465,
+    smtp_pw: process.env.SMTP_PSW || ""
+  }
+  verify({name,pw,mail},['name','pw','mail'],res)
+  const same = (await User.find({name})).length
+  if(same) return msg.er('Users with the same name.')
+  const empty = (await User.find()).length
+  empty?option.group="user":option.group="admin"
+  try {
+    const addUser = await new User(option).save()
+    if(addUser) return msg.sc(option)
+  } catch (error) {
+    return msg.er('Signup failed')
   }
 }
 
-exports.Login = async (req) => {
-  let {
-    username,
-    password,
-    token
-  } = req.body
+// User login and return jwtToken
+exports.login=async(req,res)=>{
+  let { name , pw , token }=req.body
+  const user = await User.findOne({name})
+  // token auto login
+  if(token){
+    verifyToken(token,user._id,res)
+    return msg.sc({token}) 
+  }else{
+    verify({name,pw}, ['name', 'pw'],res)
+    token = jwtSign(user._id)
+    return msg.sc({token})
+  }
+}
 
-  const config = await User.findOne({
-    status: "admin"
-  })
-  if (token) {
-    const isToken = await verifyToken(token, config._id)
-    if (!isToken) return await msg.er("Token invalid .")
-    return msg.sc({
-      token
-    })
-  } else {
-    const usePassword = verify({
-      username,
-      password
-    }, ['username', 'password'])
-    const isUsername = username === config.username
-    const isPassword = bcrypt.compareSync(password, config.password)
+exports.updateConfig=async(req,res)=>{
+  console.log(req.params);
 
-    if (usePassword || !isUsername || !isPassword) return await msg.er("username or password verify.")
-    token = jwtSign({
-      id: config._id.toString()
-    }, SECRET, {
-      expiresIn: '7d'
-    })
-    return msg.sc({
-      token
-    })
+  return {
+    name:"lancer"
   }
 }

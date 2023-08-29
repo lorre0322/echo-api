@@ -28,6 +28,7 @@ function verify(body, params) {
     }
   }
 }
+
 // 验证 Token
 function verifyToken(token, id) {
   const data = jwtVerify(token, SECRET)

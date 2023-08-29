@@ -1,0 +1,6 @@
+POST  http://192.168.10.213:4000/signup http/1.1
+Content-Type: application/json
+
+{
+  "token":"asdqwwa"
+}

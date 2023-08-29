@@ -6,7 +6,7 @@ const msg={
   er:(e)=> {
     return{
       ok:false,
-      cause:e
+      reason:e
     }
   }
 }

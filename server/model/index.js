@@ -10,30 +10,25 @@ const album = mongoose.createConnection(albumDB,{dbName})
 // 取消mongoose的版本号记录
 const option = { versionKey: false, virtuals: true }
 
-const User = blog.model("e_user", new Schema({
-  username: String,
-  password: String,
-  website: String,
-  status: String,
-  email: String,
-  page_limit: Number,
-  comment_limit: Number,
+const User = blog.model("user", new Schema({
+  name: String,
+  pw: String,
+  group: String,
+  mail: String,
   smtp_url: String,
   smtp_port: Number,
-  smtp_psw: String
+  smtp_pw: String
 }, option));
 
 
-const Moment = blog.model("e_moment", new Schema({
+const Moment = blog.model("moment", new Schema({
   date: Number,
   tag: String,
-  body:String,
-  os: String,
-  browser: String,
+  body:String
 }, option));
 
 
-const Album = album.model("e_album", new Schema({
+const Album = album.model("album", new Schema({
   name:String,
   album:String,
   desc:String,
