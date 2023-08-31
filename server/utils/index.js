@@ -1,5 +1,11 @@
 const { msg } = require('./msg');
 const jwt = require('jsonwebtoken')
+const marked = require("marked");
+const { gfmHeadingId } = require("marked-gfm-heading-id")
+marked.use({
+  mangle: false,
+  headerIds: false,
+});
 
 const SECRET = process.env.SECRET || "ECHO"
 function jwtSign(payload) {
@@ -14,7 +20,7 @@ function verify(body, params,res) {
     }
   }
 }
-
+// verify jwt token
 function verifyToken(token,id,res) {
   console.log();
   const data = jwt.verify(token,SECRET,(err,decoded)=>{
@@ -31,4 +37,18 @@ function verifyToken(token,id,res) {
   }
 }
 
-module.exports = { msg , verify , jwtSign ,verifyToken }
+// verify permission
+function verifyPermit(group,res) {
+if(group!=="admin") res.send(msg.er("You don't have permission."))
+}
+
+// Convert the markdown in body to html
+function convertListBody(datas) {
+  for (const data of datas) {
+    data.id = data._id
+    delete data._id
+    data.body = marked.parse(data.body)
+  }
+}
+
+module.exports = { msg , verify , jwtSign ,verifyToken,verifyPermit ,convertListBody }

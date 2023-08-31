@@ -1,15 +1,17 @@
 const { User } =require('../model')
 const bcrypt = require("bcrypt")
 const { msg,verify,jwtSign,verifyToken } =require('../utils')
+
+// not done
 exports.getuser=async(req,res)=>{
-return {
-  name:"lorre"
-}
+
 }
 
 // Registered Users
 exports.signup=async(req,res)=>{
   const { name , pw , mail } = req.body
+  // Verify data
+  verify({name,pw,mail},['name','pw','mail'],res)
   const option = {
     name,
     pw:bcrypt.hashSync(pw, 8),
@@ -18,10 +20,11 @@ exports.signup=async(req,res)=>{
     smtp_port: process.env.SMTP_PORT || 465,
     smtp_pw: process.env.SMTP_PSW || ""
   }
-  verify({name,pw,mail},['name','pw','mail'],res)
+  // Verify if it contains the same name
   const same = (await User.find({name})).length
   if(same) return msg.er('Users with the same name.')
   const empty = (await User.find()).length
+  // Assign permissions
   empty?option.group="user":option.group="admin"
   try {
     const addUser = await new User(option).save()
@@ -42,14 +45,11 @@ exports.login=async(req,res)=>{
   }else{
     verify({name,pw}, ['name', 'pw'],res)
     token = jwtSign(user._id)
-    return msg.sc({token})
+    return msg.sc({token,user:user.name})
   }
 }
 
+// Update user
 exports.updateConfig=async(req,res)=>{
-  console.log(req.params);
-
-  return {
-    name:"lancer"
-  }
+  
 }

@@ -6,7 +6,9 @@ const cors = require('@fastify/cors');
 
 const static = require("./routes/static")();
 const user = require("./routes/user")();
-const Router = [...static,...user]
+const moment = require("./routes/moment")();
+const blog = require("./routes/blog")();
+const Router = [...static,...user,...moment,...blog]
 
 app.register(cors, {
   origin: "*",
