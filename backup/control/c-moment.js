@@ -6,7 +6,6 @@ const { convertListBody } =require('../utils/convert-body')
 
 exports.getMoment = async (req,res)=>{
   const {id}=req.params
-
   try {
     const data=await Moment.findById(id)
     if(!data) return msg.er("not find this moment .")
@@ -36,8 +35,6 @@ exports.getMomentList = async (req,res)=>{
 exports.saveMoment = async (req,res)=>{
   const { date, tag, body, token } = req.body
   const { _id } = await User.findOne({ status: "admin" })
-
-  console.log(req.body);
   const isToken = await verifyToken(token, _id)
   const ver = verify({ body }, ['body'])
   if (!isToken || ver) return msg.er("You don't have permission .")

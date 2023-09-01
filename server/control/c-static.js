@@ -42,7 +42,7 @@ exports.addImg=async (req,res)=>{
   const same = await Album.findOne({name})
   if(same) return msg.er("Already have a same name photo.")
   // Verify permission
-  const { group,_id } = await User.findOne({name:user})
+  const { group,_id } = await User.findOne({user})
   verifyPermit(group,res)
   verifyToken(token,_id,res)
   // Default description
@@ -63,7 +63,7 @@ exports.delImg = async(req,res)=>{
   const { id } = req.params
   let { user , token } = req.body
   // Verify permission
-  const { group,_id } = await User.findOne({name:user})
+  const { group,_id } = await User.findOne({user})
   verifyPermit(group,res)
   verifyToken(token,_id,res)
   // Find and delete

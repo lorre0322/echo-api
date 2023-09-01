@@ -10,7 +10,7 @@ const album = mongoose.createConnection(albumDB,{dbName})
 const option = { versionKey: false, virtuals: true }
 
 const User = blog.model("user", new Schema({
-  name: String,
+  user: String,
   pw: String,
   group: String,
   mail: String,

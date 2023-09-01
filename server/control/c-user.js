@@ -9,23 +9,27 @@ exports.getuser=async(req,res)=>{
 
 // Registered Users
 exports.signup=async(req,res)=>{
-  const { name , pw , mail } = req.body
+  const { user , pw , mail } = req.body
   // Verify data
-  verify({name,pw,mail},['name','pw','mail'],res)
+  verify({user,pw,mail},['user','pw','mail'],res)
   const option = {
-    name,
+    user,
     pw:bcrypt.hashSync(pw, 8),
     mail,
-    smtp_url: process.env.SMTP_URL || "smtp.qq.com",
-    smtp_port: process.env.SMTP_PORT || 465,
-    smtp_pw: process.env.SMTP_PSW || ""
   }
   // Verify if it contains the same name
-  const same = (await User.find({name})).length
+  const same = (await User.find({user})).length
   if(same) return msg.er('Users with the same name.')
   const empty = (await User.find()).length
   // Assign permissions
-  empty?option.group="user":option.group="admin"
+  if(empty){
+    option.group="user"
+  }else{
+    option.group="admin"
+    option.smtp_url= process.env.SMTP_URL || "smtp.qq.com",
+    option.smtp_port= process.env.SMTP_PORT || 465,
+    option.smtp_pw= process.env.SMTP_PSW || ""
+  }
   try {
     const addUser = await new User(option).save()
     if(addUser) return msg.sc(option)
@@ -36,17 +40,24 @@ exports.signup=async(req,res)=>{
 
 // User login and return jwtToken
 exports.login=async(req,res)=>{
-  let { name , pw , token }=req.body
-  const user = await User.findOne({name})
+  let { user , pw , token }=req.body
+  const admin = await User.findOne({user:"lorre"})
   // token auto login
-  if(token){
-    verifyToken(token,user._id,res)
-    return msg.sc({token}) 
-  }else{
-    verify({name,pw}, ['name', 'pw'],res)
-    token = jwtSign(user._id)
-    return msg.sc({token,user:user.name})
+  try {   
+    if(token){
+      verifyToken(token,admin._id,res)
+      return msg.sc({token,user})
+    }else{
+      verify({user,pw}, ['user', 'pw'],res)
+      token = jwtSign(admin._id)
+      const surePw = bcrypt.compareSync(pw, admin.pw)
+      if(surePw) return msg.sc({token,user})
+    }
+    // return msg.sc({token,user})
+  } catch (error) {
+    return msg.er("Login failed.")
   }
+
 }
 
 // Update user

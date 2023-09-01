@@ -33,7 +33,7 @@ exports.addMoment=async(req,res)=>{
   const { user , token , date ,tag , body } = req.body
   verify({body},['body'],res)
   // Verify permission
-  const { group,_id } = await User.findOne({name:user})
+  const { group,_id } = await User.findOne({user})
   verifyPermit(group,res)
   verifyToken(token,_id,res)
   // Default post time
@@ -59,7 +59,7 @@ exports.delMoment=async(req,res)=>{
   const { user , token , id } = req.body
   verify({id},['id'],res)
   // Verify permission
-  const { group,_id } = await User.findOne({name:user})
+  const { group,_id } = await User.findOne({user})
   verifyPermit(group,res)
   verifyToken(token,_id,res)
   try {
